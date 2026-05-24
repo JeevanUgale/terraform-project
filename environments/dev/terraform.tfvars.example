@@ -1,0 +1,37 @@
+# Development Environment Terraform Values
+# This file contains environment-specific variable values
+
+# AWS
+aws_region = "us-east-1"
+
+# Project
+project_name = "3-tier-app"
+owner        = "DevOps Team"
+environment  = "dev"
+
+# VPC
+vpc_cidr                = "10.0.0.0/16"
+availability_zones      = ["us-east-1a", "us-east-1b"]
+public_subnet_cidrs     = ["10.0.1.0/24", "10.0.2.0/24"]
+private_subnet_cidrs    = ["10.0.10.0/24", "10.0.11.0/24"]
+
+# EC2
+instance_type           = "t3.micro"
+key_name                = "dev-key" # Change to your EC2 Key Pair name
+allowed_ssh_cidr        = "0.0.0.0/0" # IMPORTANT: Restrict this in production
+
+# RDS Database
+db_engine               = "mysql"
+db_engine_version       = "8.0.35"
+db_instance_class       = "db.t3.micro"
+allocated_storage       = 20
+db_username             = "admin"
+db_password             = "DevPassword123!" # IMPORTANT: Use a strong password and keep it secure
+db_name                 = "appdb"
+backup_retention_period = 7
+multi_az                = false
+
+# S3
+s3_bucket_name          = "3-tier-app-bucket-dev-12345" # Must be globally unique - change the numbers
+versioning_enabled      = true
+encryption_enabled      = true
