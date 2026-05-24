@@ -20,13 +20,6 @@ locals {
 resource "aws_s3_bucket" "main" {
   bucket = var.bucket_name
 
-  tags = merge(
-    local.common_tags,
-    {
-      Name = var.bucket_name
-    }
-  )
-
   lifecycle {
     ignore_changes = [tags_all]
   }
