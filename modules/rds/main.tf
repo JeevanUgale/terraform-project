@@ -153,8 +153,8 @@ resource "aws_db_instance" "main" {
 
 # DB Snapshot for backup
 resource "aws_db_snapshot" "backup" {
-  count              = 0 # Set to 1 if you want to create a snapshot
-  db_instance_id     = aws_db_instance.main.id
-  db_snapshot_id     = "${var.project_name}-db-snapshot-${var.environment}-${formatdate("YYYY-MM-DD", timestamp())}"
-  tags               = local.common_tags
+  count                 = 0 # Set to 1 if you want to create a snapshot
+  db_instance_identifier = aws_db_instance.main.id
+  db_snapshot_identifier = "${var.project_name}-db-snapshot-${var.environment}-${formatdate("YYYY-MM-DD", timestamp())}"
+  tags                  = local.common_tags
 }

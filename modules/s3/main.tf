@@ -88,6 +88,10 @@ resource "aws_s3_bucket_lifecycle_configuration" "main" {
     id     = "TransitionOldVersions"
     status = "Enabled"
 
+    filter {
+      prefix = ""
+    }
+
     # Transition to GLACIER
     noncurrent_version_transition {
       noncurrent_days = var.transition_days
@@ -105,6 +109,10 @@ resource "aws_s3_bucket_lifecycle_configuration" "main" {
     id     = "TransitionCurrentVersions"
     status = "Enabled"
 
+    filter {
+      prefix = ""
+    }
+
     transition {
       days          = var.transition_days
       storage_class = "GLACIER"
@@ -118,6 +126,10 @@ resource "aws_s3_bucket_lifecycle_configuration" "main" {
   rule {
     id     = "DeleteIncompleteMultipartUploads"
     status = "Enabled"
+
+    filter {
+      prefix = ""
+    }
 
     abort_incomplete_multipart_upload {
       days_after_initiation = 7

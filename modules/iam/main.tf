@@ -97,7 +97,7 @@ data "aws_iam_policy_document" "ec2_s3_policy" {
     condition {
       test     = "StringEquals"
       variable = "kms:ViaService"
-      values   = ["s3.${data.aws_caller_identity.current.region}.amazonaws.com"]
+      values   = ["s3.${data.aws_region.current.name}.amazonaws.com"]
     }
   }
 }
@@ -135,7 +135,7 @@ data "aws_iam_policy_document" "ec2_cloudwatch_policy" {
       "logs:DescribeLogStreams"
     ]
 
-    resources = ["arn:aws:logs:${data.aws_caller_identity.current.region}:${data.aws_caller_identity.current.account_id}:log-group:/aws/ec2/*"]
+    resources = ["arn:aws:logs:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:log-group:/aws/ec2/*"]
   }
 
   statement {

@@ -48,9 +48,9 @@ output "db_username" {
   sensitive   = true
 }
 
-output "db_security_group_id" {
-  description = "RDS security group ID"
-  value       = aws_db_instance.main.vpc_security_group_ids[0]
+output "db_security_group_ids" {
+  description = "RDS VPC security group IDs"
+  value       = aws_db_instance.main.vpc_security_group_ids
 }
 
 output "db_subnet_group_id" {
