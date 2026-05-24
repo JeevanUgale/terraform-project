@@ -22,9 +22,6 @@ resource "aws_vpc" "main" {
   enable_dns_hostnames = var.enable_dns_hostnames
   enable_dns_support   = var.enable_dns_support
 
-  lifecycle {
-    ignore_changes = [tags_all]
-  }
 }
 
 # Create Internet Gateway
@@ -37,6 +34,10 @@ resource "aws_internet_gateway" "main" {
       Name = "${var.project_name}-igw-${var.environment}"
     }
   )
+
+  lifecycle {
+    ignore_changes = [tags_all]
+  }
 }
 
 # Create Public Subnets
@@ -54,6 +55,10 @@ resource "aws_subnet" "public" {
       Type = "Public"
     }
   )
+
+  lifecycle {
+    ignore_changes = [tags_all]
+  }
 }
 
 # Create Private Subnets
@@ -70,6 +75,10 @@ resource "aws_subnet" "private" {
       Type = "Private"
     }
   )
+
+  lifecycle {
+    ignore_changes = [tags_all]
+  }
 }
 
 # Create Elastic IP for NAT Gateway
@@ -83,6 +92,10 @@ resource "aws_eip" "nat" {
       Name = "${var.project_name}-nat-eip-${var.environment}"
     }
   )
+
+  lifecycle {
+    ignore_changes = [tags_all]
+  }
 
   depends_on = [aws_internet_gateway.main]
 }
@@ -100,6 +113,10 @@ resource "aws_nat_gateway" "main" {
     }
   )
 
+  lifecycle {
+    ignore_changes = [tags_all]
+  }
+
   depends_on = [aws_internet_gateway.main]
 }
 
@@ -113,6 +130,10 @@ resource "aws_route_table" "public" {
       Name = "${var.project_name}-public-rt-${var.environment}"
     }
   )
+
+  lifecycle {
+    ignore_changes = [tags_all]
+  }
 }
 
 # Add Internet Gateway route to public route table
@@ -140,6 +161,10 @@ resource "aws_route_table" "private" {
       Name = "${var.project_name}-private-rt-${count.index + 1}-${var.environment}"
     }
   )
+
+  lifecycle {
+    ignore_changes = [tags_all]
+  }
 }
 
 # Add NAT Gateway route to private route table
@@ -167,4 +192,8 @@ resource "aws_network_acl" "main" {
       Name = "${var.project_name}-nacl-${var.environment}"
     }
   )
+
+  lifecycle {
+    ignore_changes = [tags_all]
+  }
 }

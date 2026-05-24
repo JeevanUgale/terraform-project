@@ -20,9 +20,6 @@ locals {
 resource "aws_s3_bucket" "main" {
   bucket = var.bucket_name
 
-  lifecycle {
-    ignore_changes = [tags_all]
-  }
 }
 
 # Versioning
@@ -57,14 +54,6 @@ resource "aws_s3_bucket_public_access_block" "main" {
   block_public_policy     = var.block_public_access
   ignore_public_acls      = var.block_public_access
   restrict_public_buckets = var.block_public_access
-}
-
-# ACL
-resource "aws_s3_bucket_acl" "main" {
-  bucket = aws_s3_bucket.main.id
-  acl    = "private"
-
-  depends_on = [aws_s3_bucket_public_access_block.main]
 }
 
 # Bucket Logging

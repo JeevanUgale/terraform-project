@@ -21,9 +21,6 @@ resource "aws_iam_role" "ec2_role" {
   name               = "${var.project_name}-ec2-role-${var.environment}"
   assume_role_policy = data.aws_iam_policy_document.ec2_assume_role.json
 
-  lifecycle {
-    ignore_changes = [tags_all]
-  }
 }
 
 # Trust relationship for EC2 service
@@ -114,10 +111,6 @@ resource "aws_iam_policy" "ec2_cloudwatch_policy" {
   name        = "${var.project_name}-ec2-cloudwatch-policy-${var.environment}"
   description = "Policy for EC2 to write logs to CloudWatch"
   policy      = data.aws_iam_policy_document.ec2_cloudwatch_policy.json
-
-  lifecycle {
-    ignore_changes = [tags_all]
-  }
 }
 
 data "aws_iam_policy_document" "ec2_cloudwatch_policy" {
