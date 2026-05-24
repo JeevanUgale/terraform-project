@@ -27,6 +27,10 @@ resource "aws_iam_role" "ec2_role" {
       Name = "${var.project_name}-ec2-role-${var.environment}"
     }
   )
+
+  lifecycle {
+    ignore_changes = [tags_all]
+  }
 }
 
 # Trust relationship for EC2 service
@@ -50,6 +54,10 @@ resource "aws_iam_policy" "ec2_s3_policy" {
   policy      = data.aws_iam_policy_document.ec2_s3_policy.json
 
   tags = local.common_tags
+
+  lifecycle {
+    ignore_changes = [tags_all]
+  }
 }
 
 data "aws_iam_policy_document" "ec2_s3_policy" {
@@ -121,6 +129,10 @@ resource "aws_iam_policy" "ec2_cloudwatch_policy" {
   policy      = data.aws_iam_policy_document.ec2_cloudwatch_policy.json
 
   tags = local.common_tags
+
+  lifecycle {
+    ignore_changes = [tags_all]
+  }
 }
 
 data "aws_iam_policy_document" "ec2_cloudwatch_policy" {

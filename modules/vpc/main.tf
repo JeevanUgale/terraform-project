@@ -28,6 +28,10 @@ resource "aws_vpc" "main" {
       Name = "${var.project_name}-vpc-${var.environment}"
     }
   )
+
+  lifecycle {
+    ignore_changes = [tags_all]
+  }
 }
 
 # Create Internet Gateway

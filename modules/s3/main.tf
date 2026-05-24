@@ -26,6 +26,10 @@ resource "aws_s3_bucket" "main" {
       Name = var.bucket_name
     }
   )
+
+  lifecycle {
+    ignore_changes = [tags_all]
+  }
 }
 
 # Versioning
