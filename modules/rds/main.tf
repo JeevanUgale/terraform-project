@@ -93,7 +93,7 @@ resource "aws_db_option_group" "main" {
 
 # RDS Instance
 resource "aws_db_instance" "main" {
-  identifier            = "${var.project_name}-db-${var.environment}"
+  identifier            = "${local.sanitized_project_name}-db-${var.environment}"
   engine                = var.db_engine
   engine_version        = var.db_engine_version
   instance_class        = var.db_instance_class
