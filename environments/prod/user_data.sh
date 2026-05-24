@@ -202,7 +202,7 @@ cat > /opt/app/health_check.sh << 'HEALTHSCRIPT'
 STATUS="HEALTHY"
 
 # Check if S3 is accessible
-if ! aws s3 ls s3://${S3_BUCKET} &>/dev/null; then
+if ! aws s3 ls s3://$S3_BUCKET &>/dev/null; then
     STATUS="UNHEALTHY"
     echo "S3 access check failed"
 fi
