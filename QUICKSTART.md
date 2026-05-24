@@ -3,6 +3,7 @@
 ## 5-Minute Setup
 
 ### Prerequisites
+
 ```bash
 # Verify installations
 terraform version          # >= 1.3
@@ -11,11 +12,13 @@ aws sts get-caller-identity  # Verify credentials
 ```
 
 ### Step 1: Navigate to Dev Environment (1 min)
+
 ```bash
 cd environments/dev
 ```
 
 ### Step 2: Update Configuration (1 min)
+
 ```bash
 # Edit terraform.tfvars
 nano terraform.tfvars
@@ -27,21 +30,25 @@ nano terraform.tfvars
 ```
 
 ### Step 3: Initialize Terraform (1 min)
+
 ```bash
 terraform init
 ```
 
 ### Step 4: Review Plan (1 min)
+
 ```bash
 terraform plan
 ```
 
 ### Step 5: Deploy Infrastructure (1 min)
+
 ```bash
 terraform apply -auto-approve
 ```
 
 ### Done! Get Your Outputs
+
 ```bash
 terraform output
 ```
@@ -51,6 +58,7 @@ terraform output
 ## Common Commands Cheat Sheet
 
 ### Planning & Deployment
+
 ```bash
 # Plan changes
 terraform plan -out=tfplan
@@ -66,6 +74,7 @@ terraform destroy -auto-approve
 ```
 
 ### Inspection
+
 ```bash
 # Show all outputs
 terraform output
@@ -84,6 +93,7 @@ terraform state show module.ec2.aws_instance.main
 ```
 
 ### Management
+
 ```bash
 # Format code
 terraform fmt -recursive
@@ -103,32 +113,20 @@ terraform apply
 
 ## Troubleshooting Quick Reference
 
-| Issue | Solution |
-|-------|----------|
-| "InvalidKeyPair" | Create EC2 key pair: `aws ec2 create-key-pair --key-name dev-key` |
-| "BucketAlreadyExists" | Change `s3_bucket_name` to unique name |
-| "InvalidCredential" | Run `aws configure` to set credentials |
-| "Permission denied" | EC2 key pair permissions: `chmod 400 dev-key.pem` |
-| "Subnet not found" | VPC might not have created yet; check security groups depend on VPC |
-
----
-
-## First Time Checklist
-
-- [ ] AWS credentials configured (`aws configure`)
-- [ ] Terraform installed (`terraform version`)
-- [ ] EC2 key pair created (`aws ec2 create-key-pair --key-name dev-key`)
-- [ ] S3 bucket name updated (must be globally unique)
-- [ ] RDS password changed to strong password
-- [ ] `terraform plan` reviewed
-- [ ] `terraform apply` executed
-- [ ] Outputs saved for later use
+| Issue                 | Solution                                                            |
+| --------------------- | ------------------------------------------------------------------- |
+| "InvalidKeyPair"      | Create EC2 key pair:`aws ec2 create-key-pair --key-name dev-key`  |
+| "BucketAlreadyExists" | Change `s3_bucket_name` to unique name                            |
+| "InvalidCredential"   | Run `aws configure` to set credentials                            |
+| "Permission denied"   | EC2 key pair permissions:`chmod 400 dev-key.pem`                  |
+| "Subnet not found"    | VPC might not have created yet; check security groups depend on VPC |
 
 ---
 
 ## Next Steps After Deployment
 
 ### 1. Connect to EC2
+
 ```bash
 # Get public IP
 EC2_IP=$(terraform output -raw ec2_public_ip)
@@ -138,6 +136,7 @@ ssh -i dev-key.pem ec2-user@$EC2_IP
 ```
 
 ### 2. Test RDS Connection
+
 ```bash
 # Get RDS endpoint
 RDS_ENDPOINT=$(terraform output -raw rds_address)
@@ -147,6 +146,7 @@ mysql -h $RDS_ENDPOINT -u admin -p
 ```
 
 ### 3. Test S3 Access
+
 ```bash
 # Get bucket name
 BUCKET=$(terraform output -raw s3_bucket_id)
@@ -157,6 +157,7 @@ aws s3 cp test.txt s3://$BUCKET/
 ```
 
 ### 4. Verify Security Groups
+
 ```bash
 # Check EC2 security group
 aws ec2 describe-security-groups \
@@ -168,6 +169,7 @@ aws ec2 describe-security-groups \
 ## Scaling Guide
 
 ### Increase Instance Size (Dev → Prod)
+
 ```bash
 # Edit terraform.tfvars
 instance_type = "t3.small"  # Changed from t3.micro
@@ -178,6 +180,7 @@ terraform apply
 ```
 
 ### Add More Database Storage
+
 ```bash
 # Edit terraform.tfvars
 allocated_storage = 100  # Changed from 20
@@ -194,6 +197,7 @@ aws rds modify-db-instance \
 ## Cost Tracking
 
 ### Check Current Spending
+
 ```bash
 # Last 24 hours
 aws ce get-cost-and-usage \
@@ -204,6 +208,7 @@ aws ce get-cost-and-usage \
 ```
 
 ### Estimate Monthly Cost (Dev)
+
 - EC2: ~$7/month (t3.micro)
 - RDS: ~$24/month (db.t3.micro)
 - NAT Gateway: ~$32/month
@@ -215,6 +220,7 @@ aws ce get-cost-and-usage \
 ## Production Deployment
 
 ### Switch to Production
+
 ```bash
 cd ../prod
 
@@ -227,30 +233,22 @@ terraform plan
 terraform apply
 ```
 
-### Production Checklist
-- [ ] Use stronger password for RDS
-- [ ] Restrict SSH CIDR (not 0.0.0.0/0)
-- [ ] Enable Multi-AZ for RDS
-- [ ] Use larger instance types
-- [ ] Set up remote state backend
-- [ ] Enable CloudWatch alarms
-- [ ] Review security groups
-
----
-
 ## Cleanup
 
 ### Destroy All Resources
+
 ```bash
 terraform destroy -auto-approve
 ```
 
 ### Destroy Specific Resource
+
 ```bash
 terraform destroy -target=module.ec2.aws_instance.main
 ```
 
 ### Clean Local State
+
 ```bash
 rm -rf .terraform
 rm terraform.tfstate*
@@ -261,6 +259,7 @@ rm terraform.tfstate*
 ## Example Workflows
 
 ### Complete Deployment Workflow
+
 ```bash
 # 1. Setup
 cd environments/dev
@@ -288,6 +287,7 @@ ssh -i dev-key.pem ec2-user@$EC2_IP
 ```
 
 ### Update and Rollback
+
 ```bash
 # 1. Make changes
 nano terraform.tfvars
@@ -309,39 +309,17 @@ terraform apply -auto-approve
 
 ---
 
-## Useful Aliases
-
-Add to your `.bashrc` or `.zshrc`:
-
-```bash
-# Terraform shortcuts
-alias tf='terraform'
-alias tfp='terraform plan -out=tfplan'
-alias tfa='terraform apply tfplan'
-alias tfd='terraform destroy'
-alias tfo='terraform output'
-
-# AWS shortcuts
-alias awsi='aws sts get-caller-identity'
-alias s3ls='aws s3 ls'
-alias ec2ls='aws ec2 describe-instances'
-
-# Project specific
-alias cddev='cd ~/terraform-project/environments/dev'
-alias cdprod='cd ~/terraform-project/environments/prod'
-```
-
----
-
 ## Getting Help
 
 ### Documentation
+
 - `terraform help` - Terraform help
 - `terraform <command> --help` - Command help
 - [Terraform Docs](https://www.terraform.io/docs)
 - [AWS Provider Docs](https://registry.terraform.io/providers/hashicorp/aws)
 
 ### Debug Output
+
 ```bash
 export TF_LOG=DEBUG
 export TF_LOG_PATH=/tmp/terraform.log
@@ -349,55 +327,11 @@ terraform apply
 tail -f /tmp/terraform.log
 ```
 
-### Common Issues
-See [Troubleshooting](#troubleshooting-quick-reference) section above or check README.md
-
----
-
-## Video Tutorial Commands
-
-If following along with a video tutorial:
-
-```bash
-# 1. Prerequisites (0:00)
-aws configure
-terraform --version
-
-# 2. Initialize (2:00)
-cd environments/dev
-terraform init
-
-# 3. Configure (3:30)
-nano terraform.tfvars
-# Set: key_name, s3_bucket_name, db_password
-
-# 4. Plan (4:30)
-terraform plan
-
-# 5. Deploy (5:30)
-terraform apply -auto-approve
-
-# 6. Verify (7:00)
-terraform output
-ssh -i dev-key.pem ec2-user@$(terraform output -raw ec2_public_ip)
-
-# 7. Cleanup (8:30)
-terraform destroy -auto-approve
-```
-
----
-
 ## Support Resources
 
-| Topic | Resource |
-|-------|----------|
-| Terraform Errors | [Terraform Discord](https://discord.gg/terraform) |
-| AWS Questions | [AWS Forums](https://forums.aws.amazon.com/) |
-| Security Issues | [AWS Security Best Practices](https://aws.amazon.com/security/best-practices/) |
-| Performance | [AWS Well-Architected Framework](https://aws.amazon.com/architecture/well-architected/) |
-
----
-
-**Ready to deploy? Run `terraform apply` and watch your infrastructure come to life! 🚀**
-
-Last Updated: 2024
+| Topic            | Resource                                                                             |
+| ---------------- | ------------------------------------------------------------------------------------ |
+| Terraform Errors | [Terraform Discord](https://discord.gg/terraform)                                       |
+| AWS Questions    | [AWS Forums](https://forums.aws.amazon.com/)                                            |
+| Security Issues  | [AWS Security Best Practices](https://aws.amazon.com/security/best-practices/)          |
+| Performance      | [AWS Well-Architected Framework](https://aws.amazon.com/architecture/well-architected/) |
