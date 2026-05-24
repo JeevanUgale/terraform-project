@@ -95,9 +95,10 @@ module "rds" {
   private_subnet_ids      = module.vpc.private_subnet_ids
   security_group_id       = module.security_groups.rds_security_group_id
   multi_az                = var.multi_az
-  backup_retention_period = var.backup_retention_period
-  backup_window           = "03:00-04:00"
-  maintenance_window      = "mon:04:00-mon:05:00"
+  backup_retention_period = 0
+  skip_final_snapshot      = true
+  delete_automated_backups = true
+
 
   tags = local.common_tags
 
