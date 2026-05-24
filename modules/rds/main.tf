@@ -21,7 +21,7 @@ locals {
 
 # DB Subnet Group
 resource "aws_db_subnet_group" "main" {
-  name       = "${var.project_name}-db-subnet-group-${var.environment}"
+  name       = "${local.sanitized_project_name}-db-subnet-group-${var.environment}"
   subnet_ids = var.private_subnet_ids
 
   tags = merge(
@@ -48,7 +48,7 @@ resource "aws_kms_key" "rds" {
 
 # KMS Key Alias
 resource "aws_kms_alias" "rds" {
-  name          = "alias/${var.project_name}-rds-${var.environment}"
+  name          = "alias/${local.sanitized_project_name}-rds-${var.environment}"
   target_key_id = aws_kms_key.rds.key_id
 }
 
