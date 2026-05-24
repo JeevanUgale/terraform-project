@@ -16,7 +16,8 @@ locals {
   )
 
   port = var.db_engine == "mysql" ? 3306 : 5432
-  sanitized_project_name = regexreplace(var.project_name, "^[^A-Za-z]+", "project")
+  # Ensure the project name starts with a letter. If it doesn't, prefix with 'project-'
+  sanitized_project_name = length(regexall("^[A-Za-z]", var.project_name)) > 0 ? var.project_name : "project-${var.project_name}"
 }
 
 # DB Subnet Group
@@ -137,7 +138,7 @@ resource "aws_db_instance" "main" {
 
   # Disable automatic minor version upgrade in prod
   skip_final_snapshot       = false
-  final_snapshot_identifier = "${var.project_name}-db-final-snapshot-${var.environment}-${formatdate("YYYY-MM-DD-hhmm", timestamp())}"
+  final_snapshot_identifier = "${var.project_name}-db-final-snapshot-${var.environment}-${formatdate("2006-01-02-1504", timestamp())}"
 
   # CloudWatch Logs
   enabled_cloudwatch_logs_exports = var.db_engine == "mysql" ? ["error", "general", "slowquery"] : ["postgresql"]
@@ -156,6 +157,6 @@ resource "aws_db_instance" "main" {
 resource "aws_db_snapshot" "backup" {
   count                 = 0 # Set to 1 if you want to create a snapshot
   db_instance_identifier = aws_db_instance.main.id
-  db_snapshot_identifier = "${var.project_name}-db-snapshot-${var.environment}-${formatdate("YYYY-MM-DD", timestamp())}"
+  db_snapshot_identifier = "${var.project_name}-db-snapshot-${var.environment}-${formatdate("2006-01-02", timestamp())}"
   tags                  = local.common_tags
 }
