@@ -118,12 +118,12 @@ output "instance_profile_name" {
 output "deployment_summary" {
   description = "Deployment Summary"
   value = {
-    region          = var.aws_region
-    environment     = var.environment
-    project_name    = var.project_name
-    vpc_id          = module.vpc.vpc_id
-    ec2_instance    = module.ec2.instance_id
-    rds_database    = module.rds.db_instance_identifier
-    s3_bucket       = module.s3.bucket_id
+    region       = var.aws_region
+    environment  = var.environment
+    project_name = var.project_name
+    vpc_id       = module.vpc.vpc_id
+    ec2_instance = module.ec2.instance_id
+    rds_database = module.rds.db_instance_identifier
+    s3_bucket    = module.s3.bucket_id
   }
 }

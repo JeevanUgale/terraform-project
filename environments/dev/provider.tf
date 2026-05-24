@@ -29,9 +29,7 @@ provider "aws" {
     tags = {
       Environment = "dev"
       Project     = var.project_name
-      Owner       = var.owner
       ManagedBy   = "Terraform"
-      CreatedAt   = timestamp()
     }
   }
 }

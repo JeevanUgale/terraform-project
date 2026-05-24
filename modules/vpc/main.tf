@@ -36,7 +36,7 @@ resource "aws_internet_gateway" "main" {
   )
 
   lifecycle {
-    ignore_changes = [tags_all]
+    ignore_changes = [tags["CreatedAt"], tags["CreatedBy"]]
   }
 }
 
@@ -57,7 +57,7 @@ resource "aws_subnet" "public" {
   )
 
   lifecycle {
-    ignore_changes = [tags_all]
+    ignore_changes = [tags["CreatedAt"], tags["CreatedBy"]]
   }
 }
 
@@ -77,7 +77,7 @@ resource "aws_subnet" "private" {
   )
 
   lifecycle {
-    ignore_changes = [tags_all]
+    ignore_changes = [tags["CreatedAt"], tags["CreatedBy"]]
   }
 }
 
@@ -94,7 +94,7 @@ resource "aws_eip" "nat" {
   )
 
   lifecycle {
-    ignore_changes = [tags_all]
+    ignore_changes = [tags["CreatedAt"], tags["CreatedBy"]]
   }
 
   depends_on = [aws_internet_gateway.main]
@@ -114,7 +114,7 @@ resource "aws_nat_gateway" "main" {
   )
 
   lifecycle {
-    ignore_changes = [tags_all]
+    ignore_changes = [tags["CreatedAt"], tags["CreatedBy"]]
   }
 
   depends_on = [aws_internet_gateway.main]
@@ -132,7 +132,7 @@ resource "aws_route_table" "public" {
   )
 
   lifecycle {
-    ignore_changes = [tags_all]
+    ignore_changes = [tags["CreatedAt"], tags["CreatedBy"]]
   }
 }
 
@@ -163,7 +163,7 @@ resource "aws_route_table" "private" {
   )
 
   lifecycle {
-    ignore_changes = [tags_all]
+    ignore_changes = [tags["CreatedAt"], tags["CreatedBy"]]
   }
 }
 
@@ -194,6 +194,6 @@ resource "aws_network_acl" "main" {
   )
 
   lifecycle {
-    ignore_changes = [tags_all]
+    ignore_changes = [tags["CreatedAt"], tags["CreatedBy"]]
   }
 }

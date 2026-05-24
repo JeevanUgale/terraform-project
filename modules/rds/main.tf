@@ -55,7 +55,7 @@ resource "aws_kms_alias" "rds" {
 
 # DB Parameter Group
 resource "aws_db_parameter_group" "main" {
-  family      = var.db_engine == "mysql" ? "mysql8.0" : "postgres15"
+  family      = var.db_engine == "mysql" ? "mysql8.4" : "postgres16"
   name        = "${local.sanitized_project_name}-db-params-${var.environment}"
   description = "Parameter group for ${var.project_name}"
 
@@ -86,7 +86,7 @@ resource "aws_db_option_group" "main" {
   name                     = "${local.sanitized_project_name}-db-options-${var.environment}"
   option_group_description = "Option group for ${var.project_name}"
   engine_name              = var.db_engine
-  major_engine_version     = regex("^(\\d+)", var.db_engine_version)[0]
+  major_engine_version     = "8.4"
 
   tags = local.common_tags
 }
@@ -94,8 +94,8 @@ resource "aws_db_option_group" "main" {
 # RDS Instance
 resource "aws_db_instance" "main" {
   identifier            = "${local.sanitized_project_name}-db-${var.environment}"
-  engine                = var.db_engine
-  engine_version        = var.db_engine_version
+  engine                = "mysql"
+  engine_version        = "8.4.8"
   instance_class        = var.db_instance_class
   allocated_storage     = var.allocated_storage
   storage_type          = var.storage_type
@@ -138,7 +138,7 @@ resource "aws_db_instance" "main" {
 
   # Disable automatic minor version upgrade in prod
   skip_final_snapshot       = false
-  final_snapshot_identifier = "${var.project_name}-db-final-snapshot-${var.environment}-${formatdate("2006-01-02-1504", timestamp())}"
+  final_snapshot_identifier = "${local.sanitized_project_name}-db-final-snapshot-${var.environment}-${formatdate("2006-01-02-1504", timestamp())}"
 
   # CloudWatch Logs
   enabled_cloudwatch_logs_exports = var.db_engine == "mysql" ? ["error", "general", "slowquery"] : ["postgresql"]
