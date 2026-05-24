@@ -16,6 +16,7 @@ locals {
   )
 
   port = var.db_engine == "mysql" ? 3306 : 5432
+  sanitized_project_name = regexreplace(var.project_name, "^[^A-Za-z]+", "project")
 }
 
 # DB Subnet Group
@@ -54,7 +55,7 @@ resource "aws_kms_alias" "rds" {
 # DB Parameter Group
 resource "aws_db_parameter_group" "main" {
   family      = var.db_engine == "mysql" ? "mysql8.0" : "postgres15"
-  name        = "${var.project_name}-db-params-${var.environment}"
+  name        = "${local.sanitized_project_name}-db-params-${var.environment}"
   description = "Parameter group for ${var.project_name}"
 
   # Enable slow query logging for MySQL
@@ -81,7 +82,7 @@ resource "aws_db_parameter_group" "main" {
 # DB Option Group (MySQL only)
 resource "aws_db_option_group" "main" {
   count                    = var.db_engine == "mysql" ? 1 : 0
-  name                     = "${var.project_name}-db-options-${var.environment}"
+  name                     = "${local.sanitized_project_name}-db-options-${var.environment}"
   option_group_description = "Option group for ${var.project_name}"
   engine_name              = var.db_engine
   major_engine_version     = regex("^(\\d+)", var.db_engine_version)[0]
